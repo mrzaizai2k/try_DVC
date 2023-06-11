@@ -61,7 +61,7 @@ nb_train_samples = 2 * len([name for name in os.listdir(cats_train_path)
                                 os.path.join(cats_train_path, name))])
 nb_validation_samples = 800
 epochs = 10
-batch_size = 10
+batch_size = 20
 
 
 def save_bottlebeck_features():

@@ -106,6 +106,9 @@ def train_top_model():
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Flatten(input_shape=train_data.shape[1:]))
     model.add(tf.keras.layers.Dense(256, activation='relu'))
+    model.add(tf.keras.layers.Dense(128, activation='relu'))
+    model.add(tf.keras.layers.Dense(64, activation='relu'))
+
     model.add(tf.keras.layers.Dropout(0.5))
     model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 

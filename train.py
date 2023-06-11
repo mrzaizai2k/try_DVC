@@ -43,6 +43,8 @@ import sys
 import os
 
 import tensorflow as tf
+from dvclive.keras import DVCLiveCallback
+
 
 pathname = os.path.dirname(sys.argv[0])
 path = os.path.abspath(pathname)
@@ -115,7 +117,7 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels),
               verbose=0,
-              callbacks=[tf.keras.callbacks.CSVLogger("metrics.csv")])
+              callbacks=[tf.keras.callbacks.CSVLogger("metrics.csv"), [DVCLiveCallback(save_dvc_exp=True)]])
     model.save_weights(top_model_weights_path)
 
 

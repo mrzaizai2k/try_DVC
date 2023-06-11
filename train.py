@@ -42,12 +42,7 @@ import numpy as np
 import sys
 import os
 
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dropout, Flatten, Dense
-from tensorflow.keras import applications
-from tensorflow.keras.callbacks import CSVLogger
-from tqdm.keras import TqdmCallback
+import tensorflow as tf
 
 pathname = os.path.dirname(sys.argv[0])
 path = os.path.abspath(pathname)
@@ -68,10 +63,10 @@ batch_size = 10
 
 
 def save_bottlebeck_features():
-    datagen = ImageDataGenerator(rescale=1. / 255)
+    datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
-    model = applications.VGG16(include_top=False, weights='imagenet')
+    model = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet')
 
     generator = datagen.flow_from_directory(
         train_data_dir,
@@ -106,11 +101,11 @@ def train_top_model():
         [0] * (int(nb_validation_samples / 2)) +
         [1] * (int(nb_validation_samples / 2)))
 
-    model = Sequential()
-    model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(256, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1, activation='sigmoid'))
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Flatten(input_shape=train_data.shape[1:]))
+    model.add(tf.keras.layers.Dense(256, activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.5))
+    model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 
     model.compile(optimizer='rmsprop',
                   loss='binary_crossentropy', metrics=['accuracy'])
@@ -120,7 +115,7 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels),
               verbose=0,
-              callbacks=[TqdmCallback(), CSVLogger("metrics.csv")])
+              callbacks=[tf.keras.callbacks.CSVLogger("metrics.csv")])
     model.save_weights(top_model_weights_path)
 
 
